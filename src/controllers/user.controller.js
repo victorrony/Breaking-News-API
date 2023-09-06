@@ -1,9 +1,21 @@
-const soma = (req, res) => {
-  const soma = 2 + 2;
+const create = (req, res) => {
+  const { name, email, password, avatar, background } = req.body;
 
-  res.send({ soma: soma });
+  if (!name || !email || !password || !avatar || !background) {
+    return res
+      .status(400)
+      .send({ message: "Submit all fields for registration" });
+  }
+
+  res.status(201).send({
+    message: "User created successfully",
+    user: {
+      name,
+      email,
+      avatar,
+      background,
+    },
+  });
 };
 
-module.exports = {
-  soma,
-};
+module.exports = { create };
