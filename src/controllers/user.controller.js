@@ -1,21 +1,93 @@
-const create = (req, res) => {
-  const { name, email, password, avatar, background } = req.body;
+const userService = require("../services/user.service");
 
-  if (!name || !email || !password || !avatar || !background) {
-    return res
-      .status(400)
-      .send({ message: "Submit all fields for registration" });
+const create = async (req, res) => {
+  try {
+    const { name, email, password, avatar, background } = req.body;
+
+    if (!name || !email || !password || !avatar || !background) {
+      return res
+        .status(400)
+        .send({ message: "Submit all fields for registration" });
+    }
+
+    const user = await userService.createService(req.body);
+
+    if (!user) {
+      return res.status(400).send({
+        message: "Error creating user",
+      });
+    }
+    res.status(201).send({
+      message: "User created successfully",
+      user: {
+        id: user._id,
+        name,
+        email,
+        avatar,
+        background,
+      },
+    });
+  } catch (error) {
+    res.status(400).send({
+      message: "Error creating user",
+    });
   }
-
-  res.status(201).send({
-    message: "User created successfully",
-    user: {
-      name,
-      email,
-      avatar,
-      background,
-    },
-  });
 };
 
-module.exports = { create };
+const findAll = async (req, res) => {
+  try {
+    const users = await userService.findAllService();
+
+    if (users.length === 0) {
+      return res.status(404).send({ message: "No users found" });
+    }
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(400).send({
+      message: "Error finding users",
+    });
+  }
+};
+
+const findById = async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send({
+      message: "Error finding user",
+    });
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const { name, userName, email, password, avatar, background } = req.body;
+
+    if (!name && !email && !password && !avatar && !background) {
+      return res
+        .status(400)
+        .send({ message: "Submit at least one fields for update" });
+    }
+
+    const { id, user } = req;
+
+    await userService.updateService(
+      id,
+      name,
+      userName,
+      email,
+      password,
+      avatar,
+      background
+    );
+    res.status(200).send({ message: "User updated successfully" });
+  } catch (error) {
+    res.status(400).send({
+      message: "Error updating user",
+    });
+  }
+};
+
+module.exports = { create, findAll, findById, update };
