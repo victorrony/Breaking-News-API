@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import { loginService } from "../services/auth.service.js";
+import bcrypt from "bcrypt";
+import { generateToken, loginService } from "../services/auth.service.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -11,13 +11,15 @@ const login = async (req, res) => {
       return res.status(400).send({ message: "Invalid email" });
     }
 
-    const validPassword = bcrypt.compareSync(password, user.password);
+    const PasswordIsValid = await bcrypt.compare(password, user.password);
 
-    if (!validPassword) {
+    if (!PasswordIsValid) {
       return res.status(400).send({ message: "Invalid password" });
     }
 
-    res.send({ message: "Logged in successfully" });
+    const token = generateToken(user.id);
+
+    res.send({ token });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
   }

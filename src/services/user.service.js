@@ -16,5 +16,5 @@ export default {
   createUserService,
   findAllUserService,
   findByIdUserService,
-  updateUserService,  
-}
+  updateUserService,
+};
