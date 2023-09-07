@@ -1,4 +1,4 @@
-const userService = require("../services/user.service");
+import userService from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ const create = async (req, res) => {
         .send({ message: "Submit all fields for registration" });
     }
 
-    const user = await userService.createService(req.body);
+    const user = await userService.createUserService(req.body);
 
     if (!user) {
       return res.status(400).send({
@@ -36,7 +36,7 @@ const create = async (req, res) => {
 
 const findAll = async (req, res) => {
   try {
-    const users = await userService.findAllService();
+    const users = await userService.findAllUserService();
 
     if (users.length === 0) {
       return res.status(404).send({ message: "No users found" });
@@ -73,7 +73,7 @@ const update = async (req, res) => {
 
     const { id, user } = req;
 
-    await userService.updateService(
+    await userService.updateUserService(
       id,
       name,
       userName,
@@ -90,4 +90,4 @@ const update = async (req, res) => {
   }
 };
 
-module.exports = { create, findAll, findById, update };
+export default { create, findAll, findById, update };
