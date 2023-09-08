@@ -3,11 +3,11 @@ import {
   findAllNewsService,
 } from "../services/news.service.js";
 
-const create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const { title, text, banner } = req.body;
 
-    if (!title || !text || !banner) {
+    if (!title || !banner || !text) {
       res.status(400).send({
         message: "Submit all fields for registration",
       });
@@ -17,16 +17,12 @@ const create = async (req, res) => {
       title,
       text,
       banner,
-      user: { _id: "64f9c303d836d68eded78385" },
+      user: req.userId,
     });
 
-    res.send({
-      message: "User created successfully",
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Error creating user",
-    });
+    res.send(201);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
