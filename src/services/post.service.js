@@ -1,4 +1,4 @@
-import News from "../models/New.js";
+import News from "../models/Post.js";
 
 const createNewsService = async (body) => News.create(body);
 

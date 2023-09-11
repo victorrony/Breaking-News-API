@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 import userRouter from "./src/routes/user.route.js";
 import authRouter from "./src/routes/auth.route.js";
-import newsRouter from "./src/routes/news.route.js";
+import newsRouter from "./src/routes/post.route.js";
 import swaggerRouter from "./src/routes/swagger.route.cjs"
 
 
@@ -17,7 +17,7 @@ connectDatabase();
 app.use(express.json());
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
-app.use("/news", newsRouter);
+app.use("/posts", newsRouter);
 app.use("/doc", swaggerRouter);
 
 app.listen(port, () => console.log(`Servidor rodando na port: ${port}`));

@@ -10,7 +10,7 @@ import {
   deleteByIdNewsService,
   deleteLikeNewsService,
   addCommentNewsService,
-} from "../services/news.service.js";
+} from "../services/post.service.js";
 
 export const create = async (req, res) => {
   try {

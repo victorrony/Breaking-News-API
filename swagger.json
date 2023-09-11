@@ -217,7 +217,7 @@
         }
       }
     },
-    "/news/create": {
+    "/posts/create": {
       "post": {
         "summary": "Create a new post",
         "description": "Route responsible for creating a new Post",
@@ -265,7 +265,7 @@
         }
       }
     },
-    "/news": {
+    "/posts": {
       "get": {
         "summary": "Search all posts",
         "description": "Route responsible for fetching all posts",
@@ -302,7 +302,7 @@
         }
       }
     },
-    "/post/top": {
+    "/posts/top": {
       "get": {
         "summary": "Search top post",
         "description": "Route responsible for fetching top post",
