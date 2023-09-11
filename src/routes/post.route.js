@@ -7,9 +7,9 @@ router.post("/create", authMiddleware, postController.create);
 router.get("/", postController.findAll);
 router.get("/top", postController.findTopNews);
 router.get("/search", postController.searchByTitle);
-router.get("/byUser", authMiddleware, postController.findByUser);
+router.get("/byUserId", authMiddleware, postController.findByUser);
 
-router.get("/:id", authMiddleware, postController.findById);
+router.get("/byIdPost/:id", authMiddleware, postController.findById);
 router.patch("/update/:id", authMiddleware, postController.updateById);
 router.delete("/delete/:id", authMiddleware, postController.deleteById);
 router.patch("/:id/like", authMiddleware, postController.likeById);
