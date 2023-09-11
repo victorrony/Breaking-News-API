@@ -38,9 +38,9 @@
               "examples": {
                 "Users": {
                   "value": {
-                    "name": "Cacau Lima",
-                    "username": "cacode",
-                    "email": "clima@gmail.com",
+                    "name": "victor Rony Fernandes",
+                    "userName": "victorRony",
+                    "email": "victorronyfernandes@gmail.com",
                     "password": "12345",
                     "avatar": "https://i.imgur.com/Ry1cb5M.png",
                     "background": "https://images.wallpapersden.com/image/download/triangle-8k-blue-pattern_bGZlbmiUmZqaraWkpJRmbmdlrWZlbWU.jpg"
@@ -217,7 +217,7 @@
         }
       }
     },
-    "/posts/create": {
+    "/news/create": {
       "post": {
         "summary": "Create a new post",
         "description": "Route responsible for creating a new Post",
@@ -265,7 +265,7 @@
         }
       }
     },
-    "/posts": {
+    "/news": {
       "get": {
         "summary": "Search all posts",
         "description": "Route responsible for fetching all posts",
@@ -302,7 +302,7 @@
         }
       }
     },
-    "/posts/top": {
+    "/post/top": {
       "get": {
         "summary": "Search top post",
         "description": "Route responsible for fetching top post",

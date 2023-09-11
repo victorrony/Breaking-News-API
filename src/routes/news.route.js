@@ -3,7 +3,7 @@ import newsController from "../controllers/news.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 const router = Router();
 
-router.post("/",authMiddleware,  newsController.create);
+router.post("/create",authMiddleware,  newsController.create);
 router.get("/", newsController.findAll);
 router.get("/top", newsController.findTopNews);
 router.get("/search", newsController.searchByTitle);
