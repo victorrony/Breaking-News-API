@@ -1,5 +1,5 @@
 {
-  "name": "Breaking News API",
+  "name": "breakingnews-api",
   "version": "1.0.0",
   "description": "API for MERN stack",
   "main": "index.js",
