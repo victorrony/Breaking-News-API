@@ -10,10 +10,11 @@ const countNews = async () => Posts.countDocuments();
 const findTopNewsService = async () =>
   Posts.findOne().sort({ _id: -1 }).populate("user");
 
-const findByIdNewsService = async (id) => Posts.findById(id).populate("user");
+const findByIdNewsService = async (id) =>
+  await Posts.findById(id).populate("user");
 
 const findByNewsTitleService = async (title) =>
-  Posts .find({ title: { $regex: `${title || ""}`, $options: "i" } })
+  Posts.find({ title: { $regex: `${title || ""}`, $options: "i" } })
     .sort({ _id: -1 })
     .populate("user");
 
@@ -27,7 +28,8 @@ const updateByIdNewsService = async (id) =>
     { rawResult: true }
   );
 
-const deleteByIdNewsService = async (id) => Posts.findByIdAndDelete({ _id: id });
+const deleteByIdNewsService = async (id) =>
+  Posts.findByIdAndDelete({ _id: id });
 
 const likeNewsService = async (idNews, userId) =>
   Posts.findOneAndUpdate(
