@@ -200,10 +200,10 @@ const findByUser = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
+  const { title, text, banner } = req.body;
+  const { id } = req.params;
+  const userId = req.userId;
   try {
-    const { title, text, banner } = req.body;
-    const { id } = req.params;
-
     if (!title && !banner && !text) {
       return res
         .status(400)
@@ -215,7 +215,7 @@ const updateById = async (req, res) => {
       return res.status(401).send({ message: "You didn't update this News" });
     }
 
-    await updateByIdNewsService(id, title, text, banner);
+    await updateByIdNewsService(id, title, text, banner, userId);
 
     res.status(200).send({ message: "User updated successfully" });
   } catch (error) {
@@ -226,18 +226,13 @@ const updateById = async (req, res) => {
 };
 
 const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId;
+
   try {
-    const { id } = req.params;
+    await deleteByIdNewsService(id, userId);
 
-    const news = await findByIdNewsService(id);
-
-    if (string(news.user._id) !== req.userId) {
-      return res.status(401).send({ message: "You didn't delete this News" });
-    }
-
-    await deleteByIdNewsService(id);
-
-    return res.status(200).send({ message: "News deleted successfully" });
+    return res.status(200).send({ message: "Post deleted successfully" });
   } catch (error) {
     res.status(500).send({
       message: "Internal server error",
@@ -246,18 +241,13 @@ const deleteById = async (req, res) => {
 };
 
 const likeById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { userId } = req.userId;
+  const { id } = req.params;
+  const { userId } = req.userId;
 
+  try {
     const newsLiked = await likeNewsService(id, userId);
 
-    if (!newsLiked) {
-      await deleteLikeNewsService(id, userId);
-      return res.status(201).send({ message: "like successfully removed" });
-    }
-
-    res.status(200).send({ message: "like successfully added" });
+    return res.status(201).send(newsLiked);
   } catch (error) {
     res.status(500).send({
       message: "Internal server error",
