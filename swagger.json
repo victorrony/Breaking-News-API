@@ -422,7 +422,7 @@
         }
       }
     },
-    "/posts/upadate/{id}": {
+    "/posts/update/{id}": {
       "patch": {
         "summary": "Update a post",
         "description": "Route responsible for updating a Post",
