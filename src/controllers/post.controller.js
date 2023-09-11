@@ -118,24 +118,11 @@ const findTopNews = async (req, res) => {
 };
 
 const findById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
+    const post = await findByIdNewsService(id);
 
-    const news = await findByIdNewsService(id);
-
-    res.status(200).send({
-      news: {
-        id: news._id,
-        title: news.title,
-        text: news.text,
-        banner: news.banner,
-        likes: news.likes,
-        comments: news.comments,
-        name: news.user.name,
-        userName: news.user.userName,
-        userAvatar: news.user.avatar,
-      },
-    });
+    res.status(200).send(post);
   } catch (error) {
     res.status(500).send({
       message: "Internal server error",
@@ -174,24 +161,11 @@ const searchByTitle = async (req, res) => {
 };
 
 const findByUser = async (req, res) => {
+  const id = req.userId;
   try {
-    const id = req.params;
+    const posts = await findByIdUserNewsService(id);
 
-    const news = await findByIdUserNewsService(id);
-
-    return res.status(200).send({
-      results: news.map((item) => ({
-        id: item._id,
-        title: item.title,
-        text: item.text,
-        banner: item.banner,
-        likes: item.likes,
-        comments: item.comments,
-        name: item.user.name,
-        userName: item.user.userName,
-        userAvatar: item.user.avatar,
-      })),
-    });
+    return res.status(200).send(posts);
   } catch (error) {
     res.status(500).send({
       message: "Internal server error",
