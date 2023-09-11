@@ -174,8 +174,8 @@ const findByUser = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const { title, text, banner } = req.body;
   const { id } = req.params;
+  const { title, text, banner } = req.body;
   const userId = req.userId;
   try {
     if (!title && !banner && !text) {
