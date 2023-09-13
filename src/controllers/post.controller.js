@@ -1,297 +1,156 @@
-import {
-  countNews,
-  createNewsService,
-  findAllNewsService,
-  findTopNewsService,
-  findByIdNewsService,
-  findByNewsTitleService,
-  findByIdUserNewsService,
-  updateByIdNewsService,
-  deleteByIdNewsService,
-  deleteLikeNewsService,
-  addCommentNewsService,
-} from "../services/post.service.js";
+import postService from "../services/Post.service.js";
 
-export const create = async (req, res) => {
-  try {
-    const { title, text, banner } = req.body;
-
-    if (!title || !banner || !text) {
-      res.status(400).send({
-        message: "Submit all fields for registration",
-      });
-    }
-
-    await createNewsService({
-      title,
-      text,
-      banner,
-      user: req.userId,
-    });
-
-    res.send(201);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-const findAll = async (req, res) => {
-  try {
-    let { offset, limit } = req.query;
-
-    limit = Number(limit);
-    offset = Number(offset);
-
-    if (!limit && !offset) {
-      limit = 5;
-      offset = 0;
-    }
-    const news = await findAllNewsService(offset, limit);
-    const total = await countNews();
-    const currentUrl = req.baseUrl;
-
-    const next = offset + limit;
-    const nextUrl =
-      next < total ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
-
-    const previous = offset - limit < 0 ? null : offset - limit;
-    const prevUrl =
-      previous != null
-        ? `${currentUrl}?limit=${limit}&offset=${previous}`
-        : null;
-
-    if (news.length === 0) {
-      return res.status(404).send({ message: "No news found" });
-    }
-    res.send({
-      nextUrl,
-      prevUrl,
-      limit,
-      offset,
-      total,
-
-      results: news.map((item) => ({
-        id: item._id,
-        title: item.title,
-        text: item.text,
-        banner: item.banner,
-        likes: item.likes,
-        comments: item.comments,
-        name: item.user.name,
-        userName: item.user.userName,
-        userAvatar: item.user.avatar,
-      })),
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const findTopNews = async (req, res) => {
-  try {
-    const news = await findTopNewsService();
-
-    if (!news) {
-      return res.status(404).send({ message: "No news found" });
-    }
-
-    res.send({
-      news: {
-        id: news._id,
-        title: news.title,
-        text: news.text,
-        banner: news.banner,
-        likes: news.likes,
-        comments: news.comments,
-        name: news.user.name,
-        userName: news.user.userName,
-        userAvatar: news.user.avatar,
-      },
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const findById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const post = await findByIdNewsService(id);
-
-    res.status(200).send(post);
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const searchByTitle = async (req, res) => {
-  try {
-    const { title } = req.query;
-
-    const news = await findByNewsTitleService(title);
-
-    if (news.length === 0) {
-      return res.status(404).send({ message: "No news found" });
-    }
-
-    return res.status(200).send({
-      results: news.map((item) => ({
-        id: news._id,
-        title: news.title,
-        text: news.text,
-        banner: news.banner,
-        likes: news.likes,
-        comments: news.comments,
-        name: news.user.name,
-        userName: news.user.userName,
-        userAvatar: news.user.avatar,
-      })),
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const findByUser = async (req, res) => {
-  const id = req.userId;
-  try {
-    const posts = await findByIdUserNewsService(id);
-
-    return res.status(200).send(posts);
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const updateById = async (req, res) => {
-  const { id } = req.params;
-  const { title, text, banner } = req.body;
-  const userId = req.userId;
-  try {
-    if (!title && !banner && !text) {
-      return res
-        .status(400)
-        .send({ message: "Submit one fields for registration" });
-    }
-    const news = await findByIdNewsService(id);
-
-    if (string(news.user._id) !== req.userId) {
-      return res.status(401).send({ message: "You didn't update this News" });
-    }
-
-    await updateByIdNewsService(id, title, text, banner, userId);
-
-    res.status(200).send({ message: "User updated successfully" });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const deleteById = async (req, res) => {
-  const { id } = req.params;
+async function createPost(req, res) {
+  const { title, banner, text } = req.body;
   const userId = req.userId;
 
   try {
-    await deleteByIdNewsService(id, userId);
-
-    return res.status(200).send({ message: "Post deleted successfully" });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const likeById = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.userId;
-
-  try {
-    const newsLiked = await likeNewsService(id, userId);
-
-    return res.status(201).send(newsLiked);
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const addCommentById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.userId;
-    const comment = req.body;
-
-    if (!comment) {
-      return res.status(400).send({ message: "write a message to comment" });
-    }
-
-    await addCommentNewsService(id, userId, comment);
-
-    res.status(200).send({ message: "comment successfully added" });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-const deleteCommentById = async (req, res) => {
-  try {
-    const { idNews, idComment } = req.params;
-    const userId = req.userId;
-
-    const commentDeleted = await deleteCommentService(
-      idNews,
-      idComment,
+    const post = await postService.createPostService(
+      { title, banner, text },
       userId
     );
+    return res.status(201).send(post);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+}
 
-    const commentFinder = commentDeleted.comments.find(
-      (comment) => comment.idComment === idComment
+const findAllPost = async (req, res) => {
+  const { limit, offset } = req.query;
+  const currentUrl = req.baseUrl;
+
+  try {
+    const posts = await postService.findAllPostService(
+      limit,
+      offset,
+      currentUrl
     );
+    return res.send(posts);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+};
 
-    if (!commentFinder) {
-      return res.status(404).send({ message: "Comment not found" });
-    }
+const findTopPost = async (req, res) => {
+  try {
+    const post = await postService.topNewsService();
+    return res.send(post);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+};
 
-    if (commentFinder.userId !== userId) {
-      return res.status(400).send({ message: "You can't delete this comment" });
-    }
+const findPostById = async (req, res) => {
+  const { id } = req.params;
 
-    res.send({
-      message: "Comment successfully removed!",
+  try {
+    const post = await postService.findPostByIdService(id);
+    return res.send(post);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+};
+
+const searchPostByTitle = async (req, res) => {
+  const { title } = req.query;
+
+  try {
+    const foundPosts = await postService.searchPostService(title);
+
+    return res.send(foundPosts);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+};
+
+const findPostByUserId = async (req, res) => {
+  const id = req.userId;
+  try {
+    const posts = await postService.findPostsByUserIdService(id);
+    return res.send(posts);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+};
+
+const updatePost = async (req, res) => {
+  const { title, banner, text } = req.body;
+  const { id } = req.params;
+  const userId = req.userId;
+
+  try {
+    await postService.updatePostService(id, title, banner, text, userId);
+
+    return res.send({ message: "Post successfully updated!" });
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+};
+
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId;
+
+  try {
+    await postService.deletePostService(id, userId);
+    return res.send({ message: "Post deleted successfully" });
+  } catch (err) {
+    return res.status(500).send(e.message);
+  }
+};
+
+const likePost = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId;
+
+  try {
+    const response = await postService.likePostService(id, userId);
+
+    return res.send(response);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+};
+
+const commentPost = async (req, res) => {
+  const { id: postId } = req.params;
+  const { message } = req.body;
+  const userId = req.userId;
+
+  try {
+    await postService.commentPostService(postId, message, userId);
+
+    return res.send({
+      message: "Comment successfully completed!",
     });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal server error",
-    });
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+};
+
+const commentDeletePost = async (req, res) => {
+  const { id: postId, idComment } = req.params;
+  const userId = req.userId;
+
+  try {
+    await postService.commentDeletePostService(postId, userId, idComment);
+
+    return res.send({ message: "Comment successfully removed" });
+  } catch (e) {
+    return res.status(500).send(e.message);
   }
 };
 
 export default {
-  create,
-  findAll,
-  findTopNews,
-  findById,
-  searchByTitle,
-  findByUser,
-  updateById,
-  deleteById,
-  likeById,
-  addCommentById,
-  deleteCommentById,
+  createPost,
+  findAllPost,
+  findTopPost,
+  findPostById,
+  searchPostByTitle,
+  findPostByUserId,
+  updatePost,
+  deletePost,
+  likePost,
+  commentPost,
+  commentDeletePost,
 };

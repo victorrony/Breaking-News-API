@@ -1,23 +1,28 @@
 import { Router } from "express";
 import postController from "../controllers/post.controller.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-const router = Router();
+import  authMiddleware  from "../middleware/auth.middleware.js";
+import { validId } from "../middleware/global.middleware.js";
 
-router.post("/create", authMiddleware, postController.create);
-router.get("/", postController.findAll);
-router.get("/top", postController.findTopNews);
-router.get("/search", postController.searchByTitle);
-router.get("/byUserId", authMiddleware, postController.findByUser);
+const postRouter = Router();
 
-router.get("/byIdPost/:id", authMiddleware, postController.findById);
-router.patch("/update/:id", authMiddleware, postController.updateById);
-router.delete("/delete/:id", authMiddleware, postController.deleteById);
-router.patch("/:id/like", authMiddleware, postController.likeById);
-router.patch("/:id/comment", authMiddleware, postController.addCommentById);
-router.patch(
+postRouter.use(authMiddleware);
+postRouter.post("/create", authMiddleware, postController.createPost);
+
+postRouter.get("/", postController.findAllPost);
+postRouter.get("/top", postController.findTopPost);
+postRouter.get("/search", postController.searchPostByTitle);
+
+postRouter.use( validId);
+postRouter.get("/byUserId", postController.findPostByUserId);
+postRouter.get("/byIdPost/:id", postController.findPostById);
+postRouter.patch("/update/:id", postController.updatePost);
+postRouter.delete("/delete/:id", postController.deletePost);
+postRouter.patch("/:id/like", postController.likePost);
+postRouter.patch("/:id/comment", postController.commentPost);
+postRouter.patch(
   "/:id/:idComment/comment",
   authMiddleware,
-  postController.deleteCommentById
+  postController.commentDeletePost
 );
 
-export default router;
+export default postRouter;

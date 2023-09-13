@@ -1,6 +1,15 @@
 import mongoose from "mongoose";
 
-const PostsSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  banner: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -9,29 +18,20 @@ const PostsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  banner: {
-    type: String,
+  likes: {
+    type: Array,
+    required: true,
+  },
+  comments: {
+    type: Array,
     required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  likes: {
-    type: Array,
-    require: true,
-  },
-  comments: {
-    type: Array,
-    require: true,
+    default: Date.now(),
   },
 });
 
-const Posts = mongoose.model("News", PostsSchema);
+const Post = mongoose.model("Post", PostSchema);
 
-export default Posts;
+export default Post;
