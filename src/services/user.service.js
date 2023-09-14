@@ -19,7 +19,7 @@ async function createUserService({
 
   const user = await userRepositories.createUserRepository({
     name,
-    username,
+    userName,
     email,
     password,
     avatar,

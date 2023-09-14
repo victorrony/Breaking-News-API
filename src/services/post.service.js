@@ -1,4 +1,5 @@
-import Posts from "../models/Post.js";
+// import Posts from "../models/Post.js";
+import postRepositories from "../repositories/post.repositories.js";
 
 const countPost = async () => Posts.countDocuments();
 
