@@ -42,14 +42,14 @@ async function findAllUserService() {
 }
 
 async function findUserByIdService(userIdParam, userIdLogged) {
-  let idParam;
+  let id;
   if (!userIdParam) {
     userIdParam = userIdLogged;
-    idParam = userIdParam;
+    id = userIdParam;
   } else {
-    idParam = userIdParam;
+    id = userIdParam;
   }
-  if (!idParam)
+  if (!id)
     throw new Error("Send an id in the parameters to search for the user");
 
   const user = await userRepositories.findByIdUserRepository(idParam);

@@ -7,7 +7,7 @@ const userRouter = Router();
 
 userRouter.post("/create", userController.createUserController);
 
-userRouter.use(authMiddleware);
+//userRouter.use(authMiddleware);
 userRouter.get("/", userController.findAllUserController);
 
 userRouter.use(validId);
