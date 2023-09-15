@@ -5,13 +5,13 @@ import { validId } from "../middleware/global.middleware.js";
 
 const userRouter = Router();
 
-userRouter.post("/create", userController.createUserController);
+userRouter.post("/create", userController.createUser);
 
-//userRouter.use(authMiddleware);
-userRouter.get("/", userController.findAllUserController);
+// userRouter.use(authMiddleware);
+userRouter.get("/", userController.findAllUser);
 
 userRouter.use(validId);
-userRouter.get("/findById/:id", validId, userController.findUserByIdController);
-userRouter.patch("/update/:id", validId, userController.updateUserController);
+userRouter.get("/findById/:id", userController.findUserById);
+userRouter.patch("/update/:id", userController.updateUser);
 
 export default userRouter;

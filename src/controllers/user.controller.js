@@ -1,10 +1,10 @@
 import userService from "../services/user.service.js";
 
-async function createUserController(req, res) {
+async function createUser(req, res) {
   const { name, userName, email, password, avatar, background } = req.body;
 
   try {
-    const user = await userService.createUserService({
+    const token = await userService.createUser({
       name,
       userName,
       email,
@@ -12,24 +12,24 @@ async function createUserController(req, res) {
       avatar,
       background,
     });
-    res.status(201).send(user);
+    res.status(201).send(token);
   } catch (e) {
     return res.status(400).send(e.message);
   }
 }
 
-async function findAllUserController(req, res) {
+async function findAllUser(req, res) {
   try {
-    const users = await userService.findAllUserService();
+    const users = await userService.findAllUser();
     return res.send(users);
   } catch (e) {
     return res.status(404).send(e.message);
   }
 }
 
-async function findUserByIdController(req, res) {
+async function findUserById(req, res) {
   try {
-    const user = await userService.findUserByIdService(
+    const user = await userService.findUserById(
       req.params.id,
       req.userId
     );
@@ -39,13 +39,13 @@ async function findUserByIdController(req, res) {
   }
 }
 
-async function updateUserController(req, res) {
+async function updateUser(req, res) {
   try {
     const { name, username, email, password, avatar, background } = req.body;
     const { id: userId } = req.params;
     const userIdLogged = req.userId;
 
-    const response = await userService.updateUserService(
+    const response = await userService.updateUser(
       { name, username, email, password, avatar, background },
       userId,
       userIdLogged
@@ -58,8 +58,8 @@ async function updateUserController(req, res) {
 }
 
 export default {
-  createUserController,
-  findAllUserController,
-  findUserByIdController,
-  updateUserController,
+  createUser,
+  findAllUser,
+  findUserById,
+  updateUser,
 };

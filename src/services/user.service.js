@@ -2,7 +2,7 @@ import authService from "../services/auth.service.js";
 import bcrypt from "bcrypt";
 import userRepositories from "../repositories/user.repositories.js";
 
-async function createUserService({
+async function createUser({
   name,
   userName,
   email,
@@ -33,7 +33,7 @@ async function createUserService({
   return token;
 }
 
-async function findAllUserService() {
+async function findAllUser() {
   const users = await userRepositories.findAllUserRepository();
 
   if (users.length === 0) throw new Error("There are no registered users");
@@ -41,15 +41,15 @@ async function findAllUserService() {
   return users;
 }
 
-async function findUserByIdService(userIdParam, userIdLogged) {
-  let id;
+async function findUserById(userIdParam, userIdLogged) {
+  let idParam;
   if (!userIdParam) {
     userIdParam = userIdLogged;
-    id = userIdParam;
+    idParam = userIdParam;
   } else {
-    id = userIdParam;
+    idParam = userIdParam;
   }
-  if (!id)
+  if (!idParam)
     throw new Error("Send an id in the parameters to search for the user");
 
   const user = await userRepositories.findByIdUserRepository(idParam);
@@ -59,7 +59,7 @@ async function findUserByIdService(userIdParam, userIdLogged) {
   return user;
 }
 
-async function updateUserService(
+async function updateUser(
   { name, username, email, password, avatar, background },
   userId,
   userIdLogged
@@ -87,8 +87,8 @@ async function updateUserService(
 }
 
 export default {
-  createUserService,
-  findAllUserService,
-  findUserByIdService,
-  updateUserService,
+  createUser,
+  findAllUser,
+  findUserById,
+  updateUser,
 };

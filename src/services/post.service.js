@@ -3,7 +3,7 @@ import postRepositories from "../repositories/post.repositories.js";
 
 const countPost = async () => Posts.countDocuments();
 
-async function createPostService({ title, banner, text }, userId) {
+async function createPost({ title, banner, text }, userId) {
   if (!title || !banner || !text)
     throw new Error("Submit all fields for registration");
 
@@ -20,7 +20,7 @@ async function createPostService({ title, banner, text }, userId) {
   };
 }
 
-async function findAllPostService(limit, offset, currentUrl) {
+async function findAllPost(limit, offset, currentUrl) {
   limit = Number(limit);
   offset = Number(offset);
 
@@ -67,8 +67,8 @@ async function findAllPostService(limit, offset, currentUrl) {
   };
 }
 
-async function findTopPostService() {
-  const post = await postRepositories.topNewsRepository();
+async function findTopPost() {
+  const post = await postRepositories.topPostRepository();
 
   if (!post) throw new Error("There is no registered post");
 
@@ -87,7 +87,7 @@ async function findTopPostService() {
   };
 }
 
-async function findPostByIdService(id) {
+async function findPostById(id) {
   const post = await postRepositories.findPostByIdRepository(id);
 
   if (!post) throw new Error("Post not found");
@@ -105,7 +105,7 @@ async function findPostByIdService(id) {
   };
 }
 
-async function searchPostByTitleService(title) {
+async function searchPostByTitle(title) {
   const foundPosts = await postRepositories.searchPostRepository(title);
 
   if (foundPosts.length === 0)
@@ -126,7 +126,7 @@ async function searchPostByTitleService(title) {
   };
 }
 
-async function findPostByUserIdService(id) {
+async function findPostByUserId(id) {
   const posts = await postRepositories.findPostsByUserIdRepository(id);
 
   return {
@@ -144,7 +144,7 @@ async function findPostByUserIdService(id) {
   };
 }
 
-async function updatePostService(id, title, banner, text, userId) {
+async function updatePost(id, title, banner, text, userId) {
   if (!title && !banner && !text)
     throw new Error("Submit at least one field to update the post");
 
@@ -157,8 +157,8 @@ async function updatePostService(id, title, banner, text, userId) {
   await postRepositories.updatePostRepository(id, title, banner, text);
 }
 
-async function deletePostService(id, userId) {
-  const post = await postService.findPostByIdService(id);
+async function deletePost(id, userId) {
+  const post = await postService.findPostById(id);
 
   if (!post) throw new Error("Post not found");
 
@@ -167,21 +167,21 @@ async function deletePostService(id, userId) {
   await postRepositories.deletePostRepository(id);
 }
 
-async function likePostService(id, userId) {
-  const postLiked = await postService.likesService(id, userId);
+async function likePost(id, userId) {
+  const postLiked = await postService.likespost(id, userId);
 
   if (postLiked.lastErrorObject.n === 0) {
-    await postService.likesDeleteService(id, userId);
+    await postService.likesDeletePost(id, userId);
     return { message: "Like successfully removed" };
   }
 
   return { message: "Like done successfully" };
 }
 
-async function deleteLikePostService(idPost, userId) {
+async function deleteLikePost(idPost, userId) {
   Posts.findOneAndUpdate({ _id: idPost }, { $pull: { likes: { userId } } })};
 
-async function commentPostService(postId, message, userId) {
+async function commentPost(postId, message, userId) {
   if (!message) throw new Error("Write a message to comment");
 
   const post = await postRepositories.findPostByIdRepository(postId);
@@ -191,7 +191,7 @@ async function commentPostService(postId, message, userId) {
   await postRepositories.commentsRepository(postId, message, userId);
 }
 
-async function commentDeletePostService(postId, userId, idComment) {
+async function commentDeletePost(postId, userId, idComment) {
   const post = await postRepositories.findPostByIdRepository(postId);
 
   if (!post) throw new Error("Post not found");
@@ -200,17 +200,17 @@ async function commentDeletePostService(postId, userId, idComment) {
 }
 
 export default {
-  createPostService,
-  findAllPostService,
   countPost,
-  findTopPostService,
-  searchPostByTitleService,
-  findPostByIdService,
-  findPostByUserIdService,
-  updatePostService,
-  deletePostService,
-  likePostService,
-  deleteLikePostService,
-  commentPostService,
-  commentDeletePostService,
+  createPost,
+  findAllPost,  
+  findTopPost,
+  searchPostByTitle,
+  findPostById,
+  findPostByUserId,
+  updatePost,
+  deletePost,
+  likePost,
+  deleteLikePost,
+  commentPost,
+  commentDeletePost,
 };

@@ -5,7 +5,7 @@ async function createPost(req, res) {
   const userId = req.userId;
 
   try {
-    const post = await postService.createPostService(
+    const post = await postService.createPost(
       { title, banner, text },
       userId
     );
@@ -15,12 +15,12 @@ async function createPost(req, res) {
   }
 }
 
-const findAllPost = async (req, res) => {
+async function findAllPost(req, res) {
   const { limit, offset } = req.query;
   const currentUrl = req.baseUrl;
 
   try {
-    const posts = await postService.findAllPostService(
+    const posts = await postService.findAllPost(
       limit,
       offset,
       currentUrl
@@ -31,31 +31,31 @@ const findAllPost = async (req, res) => {
   }
 };
 
-const findTopPost = async (req, res) => {
+async function findTopPost(req, res) {
   try {
-    const post = await postService.topNewsService();
+    const post = await postService.findTopPost();
     return res.send(post);
   } catch (e) {
     res.status(500).send(e.message);
   }
 };
 
-const findPostById = async (req, res) => {
+async function findPostById(req, res) {
   const { id } = req.params;
 
   try {
-    const post = await postService.findPostByIdService(id);
+    const post = await postService.findPostById(id);
     return res.send(post);
   } catch (e) {
     res.status(404).send(e.message);
   }
 };
 
-const searchPostByTitle = async (req, res) => {
+async function searchPostByTitle(req, res) {
   const { title } = req.query;
 
   try {
-    const foundPosts = await postService.searchPostService(title);
+    const foundPosts = await postService.searchPostByTitle(title);
 
     return res.send(foundPosts);
   } catch (e) {
@@ -63,23 +63,24 @@ const searchPostByTitle = async (req, res) => {
   }
 };
 
-const findPostByUserId = async (req, res) => {
+async function findPostByUserId(req, res) {
   const id = req.userId;
+
   try {
-    const posts = await postService.findPostsByUserIdService(id);
+    const posts = await postService.findPostByUserId(id);
     return res.send(posts);
   } catch (e) {
     return res.status(500).send(e.message);
   }
 };
 
-const updatePost = async (req, res) => {
+async function updatePost(req, res) {
   const { title, banner, text } = req.body;
   const { id } = req.params;
   const userId = req.userId;
 
   try {
-    await postService.updatePostService(id, title, banner, text, userId);
+    await postService.updatePost(id, title, banner, text, userId);
 
     return res.send({ message: "Post successfully updated!" });
   } catch (e) {
@@ -87,24 +88,24 @@ const updatePost = async (req, res) => {
   }
 };
 
-const deletePost = async (req, res) => {
+async function deletePost(req, res) {
   const { id } = req.params;
   const userId = req.userId;
 
   try {
-    await postService.deletePostService(id, userId);
+    await postService.deletePost(id, userId);
     return res.send({ message: "Post deleted successfully" });
   } catch (err) {
     return res.status(500).send(e.message);
   }
 };
 
-const likePost = async (req, res) => {
+async function likePost(req, res) {
   const { id } = req.params;
   const userId = req.userId;
 
   try {
-    const response = await postService.likePostService(id, userId);
+    const response = await postService.likePost(id, userId);
 
     return res.send(response);
   } catch (e) {
@@ -112,13 +113,13 @@ const likePost = async (req, res) => {
   }
 };
 
-const commentPost = async (req, res) => {
+async function commentPost(req, res) {
   const { id: postId } = req.params;
   const { message } = req.body;
   const userId = req.userId;
 
   try {
-    await postService.commentPostService(postId, message, userId);
+    await postService.commentPost(postId, message, userId);
 
     return res.send({
       message: "Comment successfully completed!",
@@ -128,12 +129,12 @@ const commentPost = async (req, res) => {
   }
 };
 
-const commentDeletePost = async (req, res) => {
+async function commentDeletePost(req, res) {
   const { id: postId, idComment } = req.params;
   const userId = req.userId;
 
   try {
-    await postService.commentDeletePostService(postId, userId, idComment);
+    await postService.commentDeletePost(postId, userId, idComment);
 
     return res.send({ message: "Comment successfully removed" });
   } catch (e) {
