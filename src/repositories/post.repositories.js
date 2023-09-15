@@ -1,10 +1,10 @@
 import Post from "../models/Post.js";
 
-function createPostRepository(title, banner, text, userId) {
+function createPost(title, banner, text, userId) {
   return Post.create({ title, banner, text, user: userId });
 }
 
-function findAllPostsRepository(offset, limit) {
+function findAllPosts(offset, limit) {
   return Post.find()
     .sort({ _id: -1 })
     .skip(offset)
@@ -12,11 +12,11 @@ function findAllPostsRepository(offset, limit) {
     .populate("user");
 }
 
-function topPostRepository() {
+function topPost() {
   return Post.findOne().sort({ _id: -1 }).populate("user");
 }
 
-function findPostByIdRepository(id) {
+function findPostById(id) {
   return Post.findById(id).populate("user");
 }
 
@@ -24,7 +24,7 @@ function countPosts() {
   return Post.countDocuments();
 }
 
-function searchPostRepository(title) {
+function searchPost(title) {
   return Post.find({
     title: { $regex: `${title || ""}`, $options: "i" },
   })
@@ -32,7 +32,7 @@ function searchPostRepository(title) {
     .populate("user");
 }
 
-function findPostsByUserIdRepository(id) {
+function findPostsByUserId(id) {
   return Post.find({
     user: id,
   })
@@ -40,7 +40,7 @@ function findPostsByUserIdRepository(id) {
     .populate("user");
 }
 
-function updatePostRepository(id, title, banner, text) {
+function updatePost(id, title, banner, text) {
   return Post.findOneAndUpdate(
     {
       _id: id,
@@ -56,11 +56,11 @@ function updatePostRepository(id, title, banner, text) {
   );
 }
 
-function deletePostRepository(id) {
+function deletePost(id) {
   return Post.findOneAndDelete({ _id: id });
 }
 
-function likesRepository(id, userId) {
+function likes(id, userId) {
   return Post.findOneAndUpdate(
     {
       _id: id,
@@ -77,7 +77,7 @@ function likesRepository(id, userId) {
   );
 }
 
-function likesDeleteRepository(id, userId) {
+function likesDelete(id, userId) {
   return Post.findOneAndUpdate(
     {
       _id: id,
@@ -92,7 +92,7 @@ function likesDeleteRepository(id, userId) {
   );
 }
 
-function commentsRepository(id, message, userId) {
+function comments(id, message, userId) {
   let idComment = Math.floor(Date.now() * Math.random()).toString(36);
   return Post.findOneAndUpdate(
     {
@@ -109,7 +109,7 @@ function commentsRepository(id, message, userId) {
   );
 }
 
-function commentsDeleteRepository(id, userId, idComment) {
+function commentsDelete(id, userId, idComment) {
   return Post.findOneAndUpdate(
     {
       _id: id,
@@ -126,17 +126,17 @@ function commentsDeleteRepository(id, userId, idComment) {
 }
 
 export default {
-  createPostRepository,
-  findAllPostsRepository,
-  topPostRepository,
-  findPostByIdRepository,
-  searchPostRepository,
-  findPostsByUserIdRepository,
-  updatePostRepository,
-  deletePostRepository,
-  likesRepository,
-  likesDeleteRepository,
-  commentsRepository,
-  commentsDeleteRepository,
+  createPost,
+  findAllPosts,
+  topPost,
+  findPostById,
+  searchPost,
+  findPostsByUserId,
+  updatePost,
+  deletePost,
+  likes,
+  likesDelete,
+  comments,
+  commentsDelete,
   countPosts,
 };

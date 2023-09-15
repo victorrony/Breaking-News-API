@@ -9,8 +9,8 @@ postRouter.get("/", postController.findAllPost);
 postRouter.get("/top", postController.findTopPost);
 postRouter.get("/search", postController.searchPostByTitle);
 
-postRouter.use(authMiddleware);
-postRouter.post("/create", authMiddleware, postController.createPost);
+// postRouter.use(authMiddleware);
+postRouter.post("/create", postController.createPost);
 
 postRouter.use(validId);
 postRouter.get("/byUserId", postController.findPostByUserId);
@@ -19,10 +19,6 @@ postRouter.patch("/update/:id", postController.updatePost);
 postRouter.delete("/delete/:id", postController.deletePost);
 postRouter.patch("/:id/like", postController.likePost);
 postRouter.patch("/:id/comment", postController.commentPost);
-postRouter.patch(
-  "/:id/:idComment/comment",
-  authMiddleware,
-  postController.commentDeletePost
-);
+postRouter.patch("/:id/:idComment/comment", postController.commentDeletePost);
 
 export default postRouter;

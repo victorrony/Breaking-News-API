@@ -7,7 +7,7 @@ async function createPost({ title, banner, text }, userId) {
   if (!title || !banner || !text)
     throw new Error("Submit all fields for registration");
 
-  const { id } = await postRepositories.createPostRepository(
+  const { id } = await postRepositories.createPost(
     title,
     banner,
     text,
@@ -32,7 +32,7 @@ async function findAllPost(limit, offset, currentUrl) {
     offset = 0;
   }
 
-  const posts = await postRepositories.findAllPostsRepository(offset, limit);
+  const posts = await postRepositories.findAllPosts(offset, limit);
 
   const total = await postRepositories.countPosts();
 
@@ -68,7 +68,7 @@ async function findAllPost(limit, offset, currentUrl) {
 }
 
 async function findTopPost() {
-  const post = await postRepositories.topPostRepository();
+  const post = await postRepositories.topPost();
 
   if (!post) throw new Error("There is no registered post");
 
@@ -88,7 +88,7 @@ async function findTopPost() {
 }
 
 async function findPostById(id) {
-  const post = await postRepositories.findPostByIdRepository(id);
+  const post = await postRepositories.findPostById(id);
 
   if (!post) throw new Error("Post not found");
 
@@ -106,7 +106,7 @@ async function findPostById(id) {
 }
 
 async function searchPostByTitle(title) {
-  const foundPosts = await postRepositories.searchPostRepository(title);
+  const foundPosts = await postRepositories.searchPost(title);
 
   if (foundPosts.length === 0)
     throw new Error("There are no posts with this title");
@@ -127,7 +127,7 @@ async function searchPostByTitle(title) {
 }
 
 async function findPostByUserId(id) {
-  const posts = await postRepositories.findPostsByUserIdRepository(id);
+  const posts = await postRepositories.findPostsByUserId(id);
 
   return {
     postsByUser: posts.map((post) => ({
@@ -148,13 +148,13 @@ async function updatePost(id, title, banner, text, userId) {
   if (!title && !banner && !text)
     throw new Error("Submit at least one field to update the post");
 
-  const post = await postRepositories.findPostByIdRepository(id);
+  const post = await postRepositories.findPostById(id);
 
   if (!post) throw new Error("Post not found");
 
   if (post.user._id != userId) throw new Error("You didn't create this post");
 
-  await postRepositories.updatePostRepository(id, title, banner, text);
+  await postRepositories.updatePost(id, title, banner, text);
 }
 
 async function deletePost(id, userId) {
@@ -164,7 +164,7 @@ async function deletePost(id, userId) {
 
   if (post.user._id != userId) throw new Error("You didn't create this post");
 
-  await postRepositories.deletePostRepository(id);
+  await postRepositories.deletePost(id);
 }
 
 async function likePost(id, userId) {
@@ -184,7 +184,7 @@ async function deleteLikePost(idPost, userId) {
 async function commentPost(postId, message, userId) {
   if (!message) throw new Error("Write a message to comment");
 
-  const post = await postRepositories.findPostByIdRepository(postId);
+  const post = await postRepositories.findPostById(postId);
 
   if (!post) throw new Error("Post not found");
 
@@ -192,11 +192,11 @@ async function commentPost(postId, message, userId) {
 }
 
 async function commentDeletePost(postId, userId, idComment) {
-  const post = await postRepositories.findPostByIdRepository(postId);
+  const post = await postRepositories.findPostById(postId);
 
   if (!post) throw new Error("Post not found");
 
-  await postRepositories.commentsDeleteRepository(postId, userId, idComment);
+  await postRepositories.commentsDelete(postId, userId, idComment);
 }
 
 export default {

@@ -10,7 +10,7 @@ userRouter.post("/create", userController.createUser);
 // userRouter.use(authMiddleware);
 userRouter.get("/", userController.findAllUser);
 
-userRouter.use(validId);
+// userRouter.use(validId);
 userRouter.get("/findById/:id", userController.findUserById);
 userRouter.patch("/update/:id", userController.updateUser);
 
