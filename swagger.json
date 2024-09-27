@@ -265,7 +265,7 @@
         }
       }
     },
-    "/posts": {
+    "/posts/": {
       "get": {
         "summary": "Search all posts",
         "description": "Route responsible for fetching all posts",
@@ -359,7 +359,7 @@
       }
     },
     "/posts/byIdPost/{id}": {
-      "patch": {
+      "get": {
         "summary": "Search post by id",
         "description": "Route responsible for fetching post by id",
         "tags": ["Post"],
@@ -394,7 +394,7 @@
         }
       }
     },
-    "/posts/byUserId": {
+    "/posts/byUserId/": {
       "get": {
         "summary": "Search posts by use id",
         "description": "Route responsible for fetching posts by use id",
@@ -533,6 +533,50 @@
       }
     },
     "/posts/{id}/comment": {
+      "patch": {
+        "summary": "Comment on a post",
+        "description": "Route responsible for commenting on a post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              },
+              "examples": {
+                "Comment": {
+                  "value": {
+                    "message": "Comentário legal"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/posts/{id}/{id}comment/comment": {
       "patch": {
         "summary": "Comment on a post",
         "description": "Route responsible for commenting on a post",

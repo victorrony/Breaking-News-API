@@ -9,11 +9,11 @@ postRouter.get("/", postController.findAllPost);
 postRouter.get("/top", postController.findTopPost);
 postRouter.get("/search", postController.searchPostByTitle);
 
-postRouter.use(authMiddleware);
+// postRouter.use(authMiddleware);
 postRouter.post("/create", postController.createPost);
 
 // postRouter.use(validId);
-postRouter.get("/byUserId", postController.findPostByUserId);
+postRouter.get("/byUserId/", postController.findPostByUserId);
 postRouter.get("/byIdPost/:id", postController.findPostById);
 postRouter.patch("/update/:id", postController.updatePost);
 postRouter.delete("/delete/:id", postController.deletePost);

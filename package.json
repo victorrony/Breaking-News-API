@@ -13,7 +13,7 @@
     "url": "git+https://github.com/victorronyfernandes/breakingnews-api.git"
   },
   "keywords": [],
-  "author": "Victor",
+  "author": "Victor", 
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
